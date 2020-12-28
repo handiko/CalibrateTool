@@ -17,15 +17,19 @@ private:
 	DAC_HandleTypeDef* hdac;
 	TIM_HandleTypeDef* htim;
 
+	uint16_t dacVal = 0;
+	float dacTune = 1.0;
+
 	void startDac(void);
 
 public:
 	CalibrateTool();
 
 	void appointDac(DAC_HandleTypeDef* hdac);
-	void appointTimer(TIM_HandleTypeDef* htim);
 
 	void tick(void);
+
+	float getCalibration(void);
 
 	virtual ~CalibrateTool();
 };

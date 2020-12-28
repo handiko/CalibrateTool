@@ -18,9 +18,7 @@ CalibrateTool::CalibrateTool() {
 void CalibrateTool::startDac(void)
 {
 	HAL_DAC_Start(hdac, DAC_CHANNEL_1);
-#ifdef DAC_CHANNEL_2
-	HAL_DAC_Start(hdac, DAC_CHANNEL_2);
-#endif
+	//HAL_DAC_Start(hdac, DAC_CHANNEL_2);
 }
 
 /*
@@ -33,14 +31,26 @@ void CalibrateTool::appointDac(DAC_HandleTypeDef* hdac)
 	startDac();
 }
 
-void CalibrateTool::appointTimer(TIM_HandleTypeDef* htim)
-{
-	this->htim = htim;
-}
-
 void CalibrateTool::tick(void)
 {
+	if(dacTune == 1.0)
+	{
+		HAL_DAC_SetValue(hdac, DAC_CHANNEL_1, DAC_ALIGN_12B_R, dacVal++);
+	}
+	else
+	{
+		HAL_DAC_SetValue(hdac, DAC_CHANNEL_1, DAC_ALIGN_12B_R, (uint32_t)(dacTune * dacVal++));
+	}
 
+	if(dacVal == 4096)
+	{
+		dacVal = 0;
+	}
+}
+
+float CalibrateTool::getCalibration(void)
+{
+	return dacTune;
 }
 
 CalibrateTool::~CalibrateTool() {
